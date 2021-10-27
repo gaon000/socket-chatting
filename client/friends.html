@@ -1,0 +1,198 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .b {
+        border: solid 1px black;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item b">
+        <a class="nav-link" href="rooms.html">Rooms</a>
+      </li>
+      <li class="nav-item b">
+        <a class="nav-link" href="users.html">Users</a>
+      </li>
+      <li class="nav-item b">
+        <a class="nav-link" href="#">Friends</a>
+      </li>
+      <li class="nav-item b">
+        <a
+          class="nav-link"
+          href="#"
+          onclick="localStorage.removeItem('access-token');window.location.href='index.html'"
+          >Logout</a
+        >
+      </li>
+    </ul>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center">
+          <button
+            class="btn btn-primary"
+            type="button"
+            onclick="inboxClicked()"
+          >
+            수신함
+          </button>
+        </div>
+        <div class="col-md-6 text-center">
+          <button class="btn btn-primary" type="button" onclick="listClicked()">
+            목록
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="container" id="data-container"></div>
+    <script>
+      inboxClicked();
+      function getDate(date) {
+        date = new Date(date);
+        const year = date.getFullYear();
+        const month = ("0" + (1 + date.getMonth())).slice(-2);
+        const day = ("0" + date.getDate()).slice(-2);
+
+        return `${year}-${month}-${day}`;
+      }
+      function inboxClicked() {
+        const cell = document.getElementById("data-container");
+        while (cell.hasChildNodes()) {
+          cell.removeChild(cell.firstChild);
+        }
+        var token = localStorage.getItem("access-token");
+        // header 정보를 추가합니다.
+        var myHeaders = new Headers();
+        myHeaders.append("authorization", `Bearer ${token}`);
+        fetch(
+          "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/inbox",
+          {
+            headers: myHeaders,
+          }
+        )
+          .then(function (res) {
+            // 서버의 응답이 json인 경우 아래의 코드를 통해서 js의 객체로 변환된 결과를 얻을 수 있습니다.
+            return res.json();
+          })
+          .then(function (res) {
+            console.log(res.data);
+            for (let user of res.data.inbox) {
+              const div = document.createElement("div");
+              div.classList.add("row", "py-3");
+              div.innerHTML = `<div class="col-md-3">ID: ${user.userId}</div>
+        <div class="col-md-2 offset-md-1">가입날짜: ${getDate(
+          user.createdAt
+        )}</div>
+        <div class="col-md-1 offset-md-4">
+          <button type="button" class="btn btn-primary" onclick="friendAccept('${
+            user.userId
+          }')">수락</button>
+          </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-primary" onclick="friendDeny('${
+            user.userId
+          }')">거절</button>
+        </div>
+        </div>`;
+              document.querySelector("#data-container").appendChild(div);
+            }
+          });
+      }
+      function listClicked() {
+        const cell = document.getElementById("data-container");
+        while (cell.hasChildNodes()) {
+          cell.removeChild(cell.firstChild);
+        }
+        var token = localStorage.getItem("access-token");
+        // header 정보를 추가합니다.
+        var myHeaders = new Headers();
+        myHeaders.append("authorization", `Bearer ${token}`);
+        fetch(
+          "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/friends",
+          {
+            headers: myHeaders,
+          }
+        )
+          .then(function (res) {
+            // 서버의 응답이 json인 경우 아래의 코드를 통해서 js의 객체로 변환된 결과를 얻을 수 있습니다.
+            return res.json();
+          })
+          .then(function (res) {
+            console.log(res.data);
+            for (let user of res.data.friends) {
+              const div = document.createElement("div");
+              div.classList.add("row", "py-3");
+              div.innerHTML = `<div class="col-md-3">ID: ${user.friend_id}</div>
+        <div class="col-md-2 offset-md-1">가입날짜: ${getDate(
+          user.createdAt
+        )}</div>
+        <div class="col-md-2 offset-md-3">
+          <button type="button" class="btn btn-primary" onclick="friendDeny('${
+            user.friend_id
+          }')">친구 삭제</button>
+          </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-primary" onclick="location.href='dm.html?recipient=${
+            user.friend_id
+          }';">DM</button>
+        </div>
+        </div>`;
+              document.querySelector("#data-container").appendChild(div);
+            }
+          });
+      }
+      function friendAccept(id) {
+        var token = localStorage.getItem("access-token");
+        // header 정보를 추가합니다.
+        var myHeaders = new Headers();
+        myHeaders.append("authorization", `Bearer ${token}`);
+        fetch(
+          `http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
+          {
+            headers: myHeaders,
+            method: "POST",
+          }
+        )
+          .then(function (res) {
+            // 서버의 응답이 json인 경우 아래의 코드를 통해서 js의 객체로 변환된 결과를 얻을 수 있습니다.
+            return res.json();
+          })
+          .then(function (res) {
+            console.log(res);
+            window.location.reload();
+          });
+      }
+
+      function friendDeny(id) {
+        var token = localStorage.getItem("access-token");
+        // header 정보를 추가합니다.
+        var myHeaders = new Headers();
+        myHeaders.append("authorization", `Bearer ${token}`);
+        fetch(
+          `http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
+          {
+            headers: myHeaders,
+            method: "DELETE",
+          }
+        )
+          .then(function (res) {
+            // 서버의 응답이 json인 경우 아래의 코드를 통해서 js의 객체로 변환된 결과를 얻을 수 있습니다.
+            return res.json();
+          })
+          .then(function (res) {
+            console.log(res);
+            window.location.reload();
+          });
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

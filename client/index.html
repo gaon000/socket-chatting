@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>How To Create Simple Login Form Design In Bootstrap 5</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://www.markuptag.com/bootstrap/5/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 offset-md-4">
+          <div class="login-form bg-light mt-4 p-4">
+            <h4>Welcome Back</h4>
+            <div class="col-12">
+              <label>Username</label>
+              <input
+                type="text"
+                name="id"
+                class="form-control"
+                id="id"
+                placeholder="ID"
+              />
+            </div>
+            <div class="col-12">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control password"
+                placeholder="Password"
+                id="password"
+              />
+            </div>
+            <div class="col-12">
+              <button class="btn btn-dark float-end" onclick="login()">
+                Sign in
+              </button>
+            </div>
+            <hr class="mt-4" />
+            <div class="col-12">
+              <p class="text-center mb-0">
+                Have not account yet? <a href="signup.html">Sign up</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script>
+      function login() {
+        const id = document.getElementById("id").value;
+        const password = document.getElementById("password").value;
+        fetch(
+          "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/auth/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: id,
+              password: password,
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            localStorage.setItem("access-token", res.data.token);
+            localStorage.setItem("userId", id);
+            window.location.href = "rooms.html";
+          });
+      }
+    </script>
+    <script src="https://www.markuptag.com/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

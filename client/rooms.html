@@ -1,0 +1,72 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .b {
+        border: solid 1px black;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item b">
+        <a class="nav-link active" href="#">Rooms</a>
+      </li>
+      <li class="nav-item b">
+        <a class="nav-link" href="users.html">Users</a>
+      </li>
+      <li class="nav-item b">
+        <a class="nav-link" href="friends.html">Friends</a>
+      </li>
+      <li class="nav-item b">
+        <a
+          class="nav-link"
+          href="#"
+          onclick="localStorage.removeItem('access-token');window.location.href='index.html'"
+          >Logout</a
+        >
+      </li>
+    </ul>
+    <div class="container"></div>
+    <script>
+      var token = localStorage.getItem("access-token");
+      // header 정보를 추가합니다.
+      var myHeaders = new Headers();
+      myHeaders.append("authorization", `Bearer ${token}`);
+      fetch(
+        "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/rooms",
+        {
+          headers: myHeaders,
+        }
+      )
+        .then(function (res) {
+          // 서버의 응답이 json인 경우 아래의 코드를 통해서 js의 객체로 변환된 결과를 얻을 수 있습니다.
+          return res.json();
+        })
+        .then(function (res) {
+          console.log(res);
+          for (let key in res.data.rooms) {
+            const div = document.createElement("div");
+            div.classList.add("row", "py-3");
+            div.innerHTML = `<div class="col-md-3">참여인원 수:${res.data.rooms[key]}</div>
+        <div class="col-md-2 offset-md-1">방 번호:${key}</div>
+        <div class="col-md-2 offset-md-4">
+          <button type="button" class="btn btn-primary" onclick="btnclicked(${key});">입장</button>
+        </div>`;
+            document.querySelector(".container").appendChild(div);
+          }
+        });
+      function btnclicked(e) {
+        location.href = `roomsDetail.html?room=${e}`;
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
