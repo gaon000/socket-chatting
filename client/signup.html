@@ -55,7 +55,6 @@
       function signup() {
         var id = document.getElementById("id").value;
         var password = document.getElementById("password").value;
-        console.log(id, password);
         fetch(
           "http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/auth/signup",
           {
@@ -72,6 +71,7 @@
           .then((res) => res.json())
           .then((res) => {
             console.log(res);
+            window.location.href = "index.html";
           });
       }
     </script>
