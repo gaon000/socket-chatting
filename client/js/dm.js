@@ -21,7 +21,7 @@ const userId = localStorage.getItem("userId");
 // 이전 대회 목록 불러오기
 
 const socket = io.connect(
-  "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/dm",
+  "http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/dm",
   {
     query: { token },
   }
@@ -33,7 +33,7 @@ socket
     console.log("**************");
 
     const res = await fetch(
-      `http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/messages?type=direct&id=${recipient}`,
+      `http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/messages?type=direct&id=${recipient}`,
       {
         method: "GET",
         mode: "cors",

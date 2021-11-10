@@ -73,7 +73,7 @@
         var myHeaders = new Headers();
         myHeaders.append("authorization", `Bearer ${token}`);
         fetch(
-          "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/inbox",
+          "http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/friendships/inbox",
           {
             headers: myHeaders,
           }
@@ -116,7 +116,7 @@
         var myHeaders = new Headers();
         myHeaders.append("authorization", `Bearer ${token}`);
         fetch(
-          "http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/friends",
+          "http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/friendships/friends",
           {
             headers: myHeaders,
           }
@@ -155,7 +155,7 @@
         var myHeaders = new Headers();
         myHeaders.append("authorization", `Bearer ${token}`);
         fetch(
-          `http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
+          `http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
           {
             headers: myHeaders,
             method: "POST",
@@ -177,7 +177,7 @@
         var myHeaders = new Headers();
         myHeaders.append("authorization", `Bearer ${token}`);
         fetch(
-          `http://ec2-3-38-100-108.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
+          `http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/friendships/${id}/friend`,
           {
             headers: myHeaders,
             method: "DELETE",

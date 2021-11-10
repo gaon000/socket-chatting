@@ -11,11 +11,14 @@ const token = localStorage.getItem("access-token");
 
 // 이전 대회 목록 불러오기
 
-const socket = io.connect("http://127.0.0.1:3000", {
-  secure: true,
-  transports: ["websocket"],
-  query: { token },
-});
+const socket = io.connect(
+  "http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000",
+  {
+    secure: true,
+    transports: ["websocket"],
+    query: { token },
+  }
+);
 socket
   .on("connect", async () => {
     console.log("**************");
@@ -23,7 +26,7 @@ socket
     console.log("**************");
 
     const res = await fetch(
-      `http://127.0.0.1:3000/messages?type=group&id=${room}`,
+      `http://ec2-3-36-49-30.ap-northeast-2.compute.amazonaws.com:3000/messages?type=group&id=${room}`,
       {
         method: "GET",
         mode: "cors",
